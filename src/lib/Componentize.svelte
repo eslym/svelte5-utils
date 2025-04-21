@@ -8,7 +8,7 @@
 	 * @returns A Svelte Component.
 	 * @example ```ts
 	 * import type { Snippet } from 'svelte';
-	 * import { componentize } from '@eslym/svelte5-magic';
+	 * import { componentize } from '@eslym/svelte5-utils';
 	 * declare const form_field_snippet: Snippet<[]>;
 	 * const FormField = componentize(form_field_snippet);
 	 * // <FormField />
@@ -22,7 +22,7 @@
 	 * @returns A Svelte Component.
 	 * @example ```ts
 	 * import type { Snippet } from 'svelte';
-	 * import { componentize } from '@eslym/svelte5-magic';
+	 * import { componentize } from '@eslym/svelte5-utils';
 	 * declare const form_field_snippet: Snippet<[params: { value: string; label: string; id?: string; }]>;
 	 * const FormField = componentize(form_field_snippet);
 	 * // Props could be bindable
