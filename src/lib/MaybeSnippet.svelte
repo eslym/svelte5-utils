@@ -2,7 +2,7 @@
 	import { BROWSER } from 'esm-env';
 	import type { Snippet } from 'svelte';
 
-	export type SnippetOrString<T extends any[]> = Snippet<T> | string | null | undefined;
+	export type SnippetOrString<T extends any[] = []> = Snippet<T> | string | null | undefined;
 
 	type Props<T extends any[]> = {
 		value: SnippetOrString<T>;
