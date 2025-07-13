@@ -30,7 +30,7 @@ type Shift<T extends any[], N extends number, S extends any[] = []> = N extends 
  * // snippet is now a Snippet<[johnDoe: string]>
  * ```
  */
-export function wrapSnippet<T extends any[], P extends RestParams<T>>(
+export function wrapSnippet<T extends any[], P extends T | RestParams<T>>(
 	snippet: Snippet<T>,
 	...params: P
 ): Snippet<Shift<T, P['length']>> {
