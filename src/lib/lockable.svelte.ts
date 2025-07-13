@@ -15,13 +15,15 @@ export type LockedEvent<T> = CustomEvent<{
 	newValue: T;
 }>;
 
+export type LockedEventListener<T> = (ev: LockedEvent<T>) => void;
+
 /**
  * A store that can be locked to prevent updates. The store will emit an event when an update is attempted while locked.
  */
 export interface LockableStore<T> {
 	/**
 	 * The value of the store. If the store is locked, this value will not be updated.
-     * NOTE: if the value is object, the update to children will not be prevented.
+	 * NOTE: if the value is object, the update to children will not be prevented.
 	 */
 	value: T;
 
@@ -40,9 +42,10 @@ export interface LockableStore<T> {
 	 * The event detail contains the current value and the new value that was attempted to be set.
 	 *
 	 * @param listener - The listener function to be called when the event is fired.
+	 * @param signal - An optional AbortSignal to remove the listener.
 	 * @returns A function to remove the listener.
 	 */
-	onupdateprevented: (listener: (ev: LockedEvent<T>) => void) => () => void;
+	onupdateprevented: (listener: LockedEventListener<T>, signal?: AbortSignal) => () => void;
 }
 
 /**
@@ -80,9 +83,13 @@ function from<T>(
 		};
 	}
 	const listeners = new Set<(ev: LockedEvent<T>) => void>();
-	function onupdateprevented(listener: (ev: LockedEvent<T>) => void) {
+	function onupdateprevented(listener: LockedEventListener<T>, signal?: AbortSignal): () => void {
 		listeners.add(listener);
-		return listeners.delete.bind(listeners, listener);
+		const cleanup = listeners.delete.bind(listeners, listener);
+		if (signal) {
+			signal.addEventListener('abort', cleanup, { once: true });
+		}
+		return cleanup;
 	}
 	const store = {
 		get value() {
